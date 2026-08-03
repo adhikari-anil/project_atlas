@@ -115,6 +115,12 @@ enum OrganizationMemberStatus {
   LEFT
 }
 
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
 // ORGANIZATION
 
 model Organization {
@@ -152,6 +158,8 @@ model OrganizationMember {
   organizationId String @map("organization_id") @db.Uuid
 
   userId String @map("user_id") @db.Uuid
+
+  role OrganizationRole @default(MEMBER)
 
   status OrganizationMemberStatus @default(ACTIVE)
 
