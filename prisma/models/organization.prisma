@@ -37,6 +37,8 @@
 
 //     members OrganizationMember[]
 
+//     projects Project[]
+
 //     @@index([ownerId])
 //     @@map("organizations")
 // }

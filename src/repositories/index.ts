@@ -24,3 +24,11 @@ export * from "./organization/find-organization-by-id";
 export * from "./organization/find-organization-by-slug";
 export * from "./organization/find-user-organizations";
 export * from "./organization/update-organization";
+
+// Project....
+export * from "./project/create-project";
+export * from "./project/delete-project";
+export * from "./project/find-project-by-id";
+export * from "./project/find-project-by-slug";
+export * from "./project/list-projects-by-organization";
+export * from "./project/update-project";

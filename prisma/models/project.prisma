@@ -1,0 +1,39 @@
+// enum ProjectStatus {
+//     PLANNING
+//     ACTIVE
+//     ON_HOLD
+//     COMPLETED
+//     ARCHIVED
+// }
+
+// model Project {
+//     id String @id @default(uuid()) @db.Uuid
+
+//     organizationId String @map("organization_id") @db.Uuid
+
+//     createdById String @map("created_by_id") @db.Uuid
+
+//     name String @db.VarChar(150)
+
+//     slug String @db.VarChar(150)
+
+//     description String?
+
+//     status ProjectStatus @default(PLANNING)
+
+//     createdAt DateTime @default(now()) @map("created_at")
+
+//     updatedAt DateTime @updatedAt @map("updated_at")
+
+//     // Relations
+
+//     organization Organization @relation(fields: [organizationId],references: [id],onDelete Cascade)
+
+//     createdBy User @relation("ProjectCreator", fields: [createdById], references [id])
+
+//     @@unique([organizationId, slug])
+//     @@index([organizationId])
+//     @@index([createdById])
+//     @@index([status])
+//     @@map("projects")
+// }

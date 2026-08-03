@@ -35,6 +35,10 @@
 
 //     organizationMemberships OrganizationMember[]
 
+//     // Project Relation...
+
+//     projects Project[] @relation("ProjectCreator")
+
 //     @@index([status])
 //     @@map("users")
 // }

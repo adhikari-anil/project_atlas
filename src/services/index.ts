@@ -14,3 +14,11 @@ export * from "../services/organization/delete-organization";
 export * from "../services/organization/get-organization";
 export * from "../services/organization/list-organization";
 export * from "../services/organization/update-organization";
+
+// Project....
+
+export * from "./project/create-project";
+export * from "./project/update-project";
+export * from "./project/delete-project";
+export * from "./project/get-project";
+export * from "./project/list-projects";
