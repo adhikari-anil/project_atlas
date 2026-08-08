@@ -2,6 +2,6 @@
 
 import { listProjects } from "@/services";
 
-export async function listProjectsAction(organizationId: string) {
-  return listProjects(organizationId);
+export async function listProjectsAction() {
+  return listProjects();
 }

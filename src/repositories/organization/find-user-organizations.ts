@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-export async function findUserOrganizations(userId: string) {
+export async function findUserOrganizationsByUserId(userId: string) {
   return prisma.organizationMember.findMany({
     where: {
       userId,

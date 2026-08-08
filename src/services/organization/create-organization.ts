@@ -3,11 +3,13 @@ import { CreateOrganizationInput } from "@/validations/organization-schema";
 import { getCurrentUser } from "../auth/getCurrentUser";
 import { findOrganizationBySlug } from "@/repositories/index";
 import { OrganizationRole } from "../../../generated/prisma/enums";
+import { generateSlug } from "@/lib/slug";
 
 export async function createOrganization(data: CreateOrganizationInput) {
   const user = await getCurrentUser();
+  const slug = generateSlug(data.name);
 
-  const existingOrganization = await findOrganizationBySlug(data.slug);
+  const existingOrganization = await findOrganizationBySlug(slug);
 
   if (existingOrganization) {
     throw new Error("Organization slug already exists.");
@@ -17,7 +19,7 @@ export async function createOrganization(data: CreateOrganizationInput) {
     const organization = await tx.organization.create({
       data: {
         name: data.name,
-        slug: data.slug,
+        slug,
         description: data.description || null,
         logoUrl: data.logoUrl || null,
         ownerId: user.id,

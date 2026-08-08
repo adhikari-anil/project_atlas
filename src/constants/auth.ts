@@ -8,3 +8,5 @@ export const AUTH = {
   ACCESS_COOKIE_MAX_AGE: 60 * 15, // 15 minutes
   REFRESH_COOKIE_MAX_AGE: 60 * 60 * 24 * 30, // 30 days
 } as const;
+
+export const CURRENT_ORGANIZATION_COOKIE = "current_organization";

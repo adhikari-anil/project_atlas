@@ -3,21 +3,21 @@ import {
   findProjectBySlug,
 } from "@/repositories";
 
-import { getCurrentUser } from "@/services/index";
+import { getCurrentOrganization, getCurrentUser } from "@/services/index";
 
 import { CreateProjectInput } from "@/validations/project-schema";
 
 import { generateSlug } from "@/lib/slug";
 
-export async function createProject(
-  organizationId: string,
-  data: CreateProjectInput,
-) {
+export async function createProject(data: CreateProjectInput) {
   /*
    * Current User
    */
 
   const currentUser = await getCurrentUser();
+
+  // Get your current organization...
+  const organizationId = await getCurrentOrganization();
 
   /*
    * Generate slug
