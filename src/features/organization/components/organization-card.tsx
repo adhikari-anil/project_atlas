@@ -54,9 +54,15 @@
 
 import { useRouter } from "next/navigation";
 
-import { selectOrganizationAction } from "@/actions/index";
+import {
+  deleteOrganizationAction,
+  selectOrganizationAction,
+} from "@/actions/index";
 
 import { Organization } from "../types/organization";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useState } from "react";
 
 interface OrganizationCardProps {
   organization: Organization;
@@ -64,9 +70,11 @@ interface OrganizationCardProps {
 
 export function OrganizationCard({ organization }: OrganizationCardProps) {
   const router = useRouter();
-  console.log("From org card: ", organization.id);
+  const [isPending, setIsPending] = useState(false);
+  const [isDeletePending, setIsDeletePending] = useState(false);
 
   async function handleSelect() {
+    setIsPending(true);
     try {
       await selectOrganizationAction(organization.id);
 
@@ -75,27 +83,59 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
     } catch (error) {
       console.error(error);
       alert("Failed to select organization.");
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  async function handleDelete() {
+    setIsDeletePending(true);
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this Organization?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+    try {
+      await deleteOrganizationAction(organization.id);
+      router.refresh();
+    } catch (error) {
+      console.log("Error while deleting organization", error);
+    } finally {
+      setIsDeletePending(false);
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleSelect}
-      className="group w-full text-left"
-    >
-      <div className="flex h-full flex-col rounded-xl border bg-white p-6 transition hover:shadow-md">
-        {/* Header */}
-        <div className="mb-4 flex items-start justify-between">
-          <div>
-            <h3 className="text-lg font-semibold">{organization.name}</h3>
-
-            <p className="mt-1 text-sm text-gray-500">@{organization.slug}</p>
-          </div>
-
+    <div className="group w-full text-left">
+      <div className="flex h-full flex-col rounded-xl border bg-white p-6 transition hover:shadow-md gap-4">
+        <div className="flex justify-between gap-2">
           <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
             {organization.type}
           </span>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline">
+              <Link href={`/dashboard/organizations/${organization.id}/edit`}>
+                Edit
+              </Link>
+            </Button>
+
+            <Button
+              type="button"
+              size="sm"
+              variant="destructive"
+              onClick={handleDelete}
+            >
+              {isDeletePending ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </div>
+        {/* Header */}
+        <div className="flex justify-between">
+          <h3 className="text-lg font-semibold">{organization.name}</h3>
+
+          <p className="mt-1 text-sm text-gray-500">@{organization.slug}</p>
         </div>
 
         {/* Description */}
@@ -112,10 +152,12 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
           </span>
 
           <span className="text-sm font-medium text-blue-600 transition group-hover:translate-x-1">
-            Open →
+            <button onClick={handleSelect}>
+              {isPending ? "Opening..." : "Open"} →
+            </button>
           </span>
         </div>
       </div>
-    </button>
+    </div>
   );
 }

@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { createOrganizationAction } from "@/actions";
+import { createOrganizationAction, updateOrganizationAction } from "@/actions";
 
 import {
   createOrganizationSchema,
+  UpdateOrganizationInput,
+  updateOrganizationSchema,
   type CreateOrganizationInput,
 } from "@/validations/organization-schema";
 
@@ -16,37 +18,71 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export function OrganizationForm() {
+interface OrganizationProps {
+  organization?: {
+    id: string;
+    name: string;
+    description: string | null;
+    logoUrl?: string | null;
+  };
+}
+
+export function OrganizationForm({ organization }: OrganizationProps) {
   const router = useRouter();
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const isEditing = Boolean(organization);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CreateOrganizationInput>({
-    resolver: zodResolver(createOrganizationSchema),
+  } = useForm<CreateOrganizationInput | UpdateOrganizationInput>({
+    resolver: zodResolver(
+      isEditing ? updateOrganizationSchema : createOrganizationSchema,
+    ),
     defaultValues: {
-      name: "",
-      description: "",
+      name: organization?.name ?? "",
+      description: organization?.description ?? "",
+      logoUrl: organization?.logoUrl ?? "",
     },
   });
 
-  const onSubmit = async (data: CreateOrganizationInput) => {
+  useEffect(() => {
+    if (!organization) {
+      return;
+    }
+
+    reset({
+      name: organization?.name ?? "",
+      description: organization?.description ?? "",
+      logoUrl: organization?.logoUrl ?? "",
+    });
+  }, [organization, reset]);
+
+  const onSubmit = async (
+    data: CreateOrganizationInput | UpdateOrganizationInput,
+  ) => {
     setIsSubmitted(true);
 
     try {
-      const result = await createOrganizationAction(data);
+      if (isEditing && organization) {
+        const result = await updateOrganizationAction(organization.id, data);
 
-      if (!result) {
-        alert("Problem in creating organization");
-        return;
+        if (!result) {
+          alert("Problem in updating organization");
+          return;
+        }
+      } else {
+        const result = await createOrganizationAction(data);
+
+        if (!result) {
+          alert("Problem in creating organization");
+          return;
+        }
       }
-
       reset();
-
       router.push("/dashboard/organizations");
     } catch (error) {
       console.log("Error conducting transactions...", error);
@@ -84,7 +120,13 @@ export function OrganizationForm() {
       </div>
 
       <Button type="submit" disabled={isSubmitted} className="w-full">
-        {isSubmitted ? "Creating Organization..." : "Create Organization"}
+        {isEditing
+          ? isSubmitted
+            ? "Editing Organization..."
+            : "Edit Organization"
+          : isSubmitted
+            ? "Creating Organization..."
+            : "Create Organization"}
       </Button>
     </form>
   );
