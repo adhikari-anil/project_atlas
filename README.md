@@ -1,36 +1,237 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SaaS Project Management Platform
 
-## Getting Started
+A multi-tenant SaaS project management application where users can authenticate, create organizations, manage projects, and manage tasks within those projects.
 
-First, run the development server:
+---
+
+## 🚀 Current MVP Status
+
+```text
+SaaS MVP
+────────────────────────────────
+
+Authentication
+  ✅ Register
+  ✅ Login
+  ✅ Logout
+  ✅ Protected routes
+
+Organizations
+  ✅ Create
+  ✅ List
+  ✅ Select
+  ✅ Update
+  ✅ Delete
+
+Projects
+  ✅ Create
+  ✅ List
+  ✅ Detail
+  ✅ Update
+  ✅ Delete
+
+Tasks
+  ✅ Create
+  ✅ List
+  ✅ Update
+  ✅ Delete
+
+Dashboard
+  ✅ Real organization/project/task data
+
+Navigation
+  ⬜ Final cleanup
+
+UI
+  ⬜ Final cleanup
+
+Testing
+  ⬜ End-to-end regression
+```
+
+The core MVP functionality is implemented. Final navigation/UI cleanup and a complete end-to-end regression pass remain.
+
+---
+
+## 🧰 Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- React Hook Form
+- Zod
+- Prisma
+- PostgreSQL
+- Node.js
+
+The project also uses a layered service/repository architecture to keep application logic organized.
+
+---
+
+## 🗂️ Project Structure
+
+The project follows a feature-oriented structure alongside the application layers.
+
+```
+src/
+├── actions/
+│   ├── auth/
+│   ├── organization/
+│   ├── project/
+│   └── task/
+│
+├── app/
+│   ├── dashboard/
+│   │   ├── organizations/
+│   │   ├── projects/
+│   │   └── ...
+│   └── ...
+│
+├── components/
+│   ├── forms/
+│   └── ui/
+│
+├── features/
+│   ├── organization/
+│   ├── project/
+│   └── task/
+│
+├── repositories/
+│
+├── services/
+│   ├── auth/
+│   ├── organization/
+│   ├── project/
+│   └── task/
+│
+├── validations/
+│
+└── lib/
+```
+
+Database models are maintained through Prisma.
+
+---
+
+## 🛠️ Local Development
+
+### Prerequisites
+
+Make sure you have:
+
+- Node.js
+- npm
+- PostgreSQL-compatible database
+- Git
+
+### Clone the repository
+
+```bash
+git clone <your-repository-url>
+
+cd <your-project-directory>
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Configure environment variables
+
+Create a `.env` file and configure the required environment variables, including your database connection and authentication configuration.
+
+Example:
+
+```
+DATABASE_URL="your_database_url"
+```
+
+**Do not commit `.env` or any file containing real credentials.**
+
+### Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+### Run database migrations
+
+```bash
+npx prisma migrate dev
+```
+
+### Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📋 MVP Testing Checklist
 
-## Learn More
+Before considering the MVP release-ready, perform the following end-to-end test.
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
+- [ ] Register a new account
+- [ ] Login
+- [ ] Access dashboard
+- [ ] Logout
+- [ ] Verify protected routes redirect unauthenticated users
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Organizations
+- [ ] Create organization
+- [ ] Verify owner membership
+- [ ] List organizations
+- [ ] Select organization
+- [ ] Update organization
+- [ ] Delete organization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Projects
+- [ ] Create project
+- [ ] Verify project belongs to selected organization
+- [ ] List projects
+- [ ] Open project detail
+- [ ] Update project
+- [ ] Delete project
 
-## Deploy on Vercel
+### Tasks
+- [ ] Create task
+- [ ] List tasks
+- [ ] Update task
+- [ ] Change task status
+- [ ] Change task priority
+- [ ] Delete task
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Data isolation
+- [ ] Verify Organization A cannot access Organization B's projects
+- [ ] Verify task operations are scoped to the correct organization
+- [ ] Verify unauthorized organization operations are rejected
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🚧 Current Remaining Work
+
+The core functionality is complete. The remaining work is intentionally focused on polish and verification:
+
+```
+Navigation
+  ⬜ Final cleanup
+
+UI
+  ⬜ Final cleanup
+
+Testing
+  ⬜ End-to-end regression
+```
+
+These are not new architectural features. They are the final steps before considering the current MVP stable.
+
+---
+
+For a deeper dive into the application's design, features, and architecture, see [aboutProject.md](./aboutProject.md).
