@@ -60,6 +60,8 @@ model User {
 
   assignedTasks Task[] @relation("AssignedTasks")
 
+  organizationInvitations OrganizationInvitation[] @relation("OrganizationInvitationsSent")
+
   @@index([status])
   @@map("users")
 }
@@ -166,6 +168,8 @@ model Organization {
 
   projects Project[]
 
+  invitations OrganizationInvitation[]
+
   @@index([ownerId])
   @@map("organizations")
 }
@@ -199,7 +203,35 @@ model OrganizationMember {
 }
 
 // ORGANIZATION INVITATION
-// for future...
+model OrganizationInvitation {
+  id String @id @default(uuid()) @db.Uuid
+
+  organizationId String @map("organization_id") @db.Uuid
+  invitedById    String @map("invited_by_id") @db.Uuid
+
+  email String @db.VarChar(255)
+
+  role OrganizationRole @default(MEMBER)
+
+  token String @unique
+
+  expiresAt DateTime @map("expires_at")
+
+  acceptedAt DateTime? @map("accepted_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // RELATIONS
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  invitedBy User @relation("OrganizationInvitationsSent", fields: [invitedById], references: [id])
+
+  @@index([organizationId])
+  @@index([email])
+  @@index([expiresAt])
+  @@map("organization_invitations")
+}
 
 // Project 
 
