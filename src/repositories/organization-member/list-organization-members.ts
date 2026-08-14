@@ -13,6 +13,7 @@ export async function listOrganizationMembers(organizationId: string) {
           id: true,
           firstName: true,
           lastName: true,
+          username: true,
           email: true,
           avatarUrl: true,
         },
