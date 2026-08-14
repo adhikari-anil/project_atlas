@@ -25,6 +25,7 @@ export * from "./organization/get-current-organization";
 export * from "./organization/invite-member";
 export * from "./organization/accept-invitation";
 export * from "./organization/remove-member";
+export * from "./organization/leave-organization";
 
 // Project....
 

@@ -2,6 +2,7 @@ import { listMembers } from "@/services/organization/list-member";
 
 import { InviteMemberForm } from "../components/invite-member-form";
 import { OrganizationMemberList } from "../components/organization-member-list";
+import { LeaveOrganizationButton } from "../components/leave-organization-button";
 
 export async function OrganizationMembersScreen() {
   const members = await listMembers();
@@ -15,6 +16,7 @@ export async function OrganizationMembersScreen() {
           Manage people who belong to your organization.
         </p>
       </div>
+      <LeaveOrganizationButton />
 
       <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
         <InviteMemberForm />
