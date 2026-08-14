@@ -7,3 +7,9 @@ export const inviteMemberSchema = z.object({
 });
 
 export type InviteMemberInput = z.infer<typeof inviteMemberSchema>;
+
+export const acceptInvitationSchema = z.object({
+  token: z.string().min(1, "Invitation token is required."),
+});
+
+export type AcceptInvitationInput = z.infer<typeof acceptInvitationSchema>;

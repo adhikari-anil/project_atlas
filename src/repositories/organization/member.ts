@@ -14,3 +14,17 @@ export async function findOrganizationMemberByEmail(
     },
   });
 }
+
+export async function createOrganizationMember(data: {
+  organizationId: string;
+  userId: string;
+  role: "ADMIN" | "MEMBER";
+}) {
+  return prisma.organizationMember.create({
+    data: {
+      organizationId: data.organizationId,
+      userId: data.userId,
+      role: data.role,
+    },
+  });
+}

@@ -23,6 +23,7 @@ export * from "./organization/get-current-organization";
 
 // organization invitation....
 export * from "./organization/invite-member";
+export * from "./organization/accept-invitation";
 
 // Project....
 

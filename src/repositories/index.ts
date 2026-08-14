@@ -46,3 +46,4 @@ export * from "./organization-member/list-organization-members";
 
 // Organization invitation...
 export * from "./organization/invitation";
+export * from "./organization/member";

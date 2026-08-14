@@ -19,6 +19,7 @@ export * from "./organization/select-organization";
 
 // Organization invitation....
 export * from "./organization/invite-member";
+export * from "./organization/accept-invitation";
 
 // Project.....
 

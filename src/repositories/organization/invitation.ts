@@ -25,3 +25,50 @@ export async function createOrganizationInvitation(data: {
     data,
   });
 }
+
+export async function findOrganizationInvitationByToken(token: string) {
+  return prisma.organizationInvitation.findUnique({
+    where: {
+      token,
+    },
+  });
+}
+
+export async function acceptOrganizationInvitation(invitationId: string) {
+  return prisma.organizationInvitation.update({
+    where: {
+      id: invitationId,
+    },
+    data: {
+      acceptedAt: new Date(),
+    },
+  });
+}
+
+export async function acceptInvitationTransaction(
+  invitationId: string,
+  organizationId: string,
+  userId: string,
+  role: "ADMIN" | "MEMBER",
+) {
+  return prisma.$transaction(async (tx) => {
+    const member = await tx.organizationMember.create({
+      data: {
+        organizationId,
+        userId,
+        role,
+      },
+    });
+
+    await tx.organizationInvitation.update({
+      where: {
+        id: invitationId,
+      },
+      data: {
+        acceptedAt: new Date(),
+      },
+    });
+
+    return member;
+  });
+}

@@ -16,6 +16,7 @@ export function InviteMemberForm() {
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [invitationToken, setInvitationToken] = useState("");
 
   const {
     register,
@@ -34,12 +35,13 @@ export function InviteMemberForm() {
     setServerError("");
     setSuccessMessage("");
     setIsSubmitting(true);
+    setInvitationToken("");
 
     try {
-      await inviteMemberAction(data);
+      const invitation = await inviteMemberAction(data);
 
+      setInvitationToken(invitation.token);
       setSuccessMessage("Invitation created successfully.");
-
       reset();
     } catch (error) {
       if (error instanceof Error) {
@@ -113,6 +115,16 @@ export function InviteMemberForm() {
         <p className="rounded-md bg-green-50 p-3 text-sm text-green-600">
           {successMessage}
         </p>
+      )}
+
+      {invitationToken && (
+        <div className="rounded-md bg-blue-50 p-4">
+          <p className="text-sm font-medium">Invitation created.</p>
+
+          <p className="mt-2 break-all text-xs text-gray-600">
+            {invitationToken}
+          </p>
+        </div>
       )}
 
       <Button type="submit" disabled={isSubmitting}>
