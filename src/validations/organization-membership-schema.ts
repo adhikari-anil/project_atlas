@@ -13,3 +13,9 @@ export const acceptInvitationSchema = z.object({
 });
 
 export type AcceptInvitationInput = z.infer<typeof acceptInvitationSchema>;
+
+export const userIdSchema = z.object({
+  userId: z.string().uuid("Invalid user id."),
+});
+
+export type UserIdInput = z.infer<typeof userIdSchema>;

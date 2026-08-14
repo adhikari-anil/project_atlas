@@ -28,3 +28,20 @@ export async function createOrganizationMember(data: {
     },
   });
 }
+
+export async function removeOrganizationMember(
+  organizationId: string,
+  userId: string,
+) {
+  return prisma.organizationMember.update({
+    where: {
+      organizationId_userId: {
+        organizationId,
+        userId,
+      },
+    },
+    data: {
+      status: "LEFT",
+    },
+  });
+}

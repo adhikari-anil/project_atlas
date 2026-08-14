@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { RemoveMemberButton } from "./remove-member-button";
 
 interface OrganizationMember {
   organizationId: string;
@@ -67,6 +68,9 @@ export function OrganizationMemberList({
               <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium">
                 {member.role}
               </span>
+              {member.role !== "OWNER" && (
+                <RemoveMemberButton userId={member.userId} />
+              )}
             </div>
           ))
         )}
