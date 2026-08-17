@@ -41,7 +41,7 @@ export async function updateTask(taskId: string, data: UpdateTaskInput) {
 
   return updateTaskRepository(taskId, {
     ...data,
-
+    dueDate: data.dueDate ? new Date(`${data.dueDate}T00:00:00.000Z`) : null,
     assignedTo: data.assignedToId
       ? {
           connect: {

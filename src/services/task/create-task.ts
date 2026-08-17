@@ -49,7 +49,7 @@ export async function createTask(projectId: string, data: CreateTaskInput) {
     description: data.description,
     status: data.status,
     priority: data.priority,
-    dueDate: data.dueDate,
+    dueDate: data.dueDate ? new Date(`${data.dueDate}T00:00:00.000Z`) : null,
 
     project: {
       connect: {
