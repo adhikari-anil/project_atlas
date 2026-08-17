@@ -43,7 +43,9 @@ export function ProjectCard({ project }: Props) {
   function handleSelect() {
     setIsPending(true);
     try {
-      router.push(`/dashboard/projects/${project.id}`);
+      router.push(
+        `/dashboard/organizations/${project.organizationId}/projects/${project.id}`,
+      );
     } catch (error) {
       console.log("Error while visiting listTaskScreen: ", error);
     } finally {
@@ -60,7 +62,7 @@ export function ProjectCard({ project }: Props) {
           </div>
           <div className="flex gap-2">
             <Button size="sm" variant="outline">
-              <Link href={`/dashboard/projects/${project.id}/edit`}>Edit</Link>
+              <Link href={`/dashboard/organizations/${project.organizationId}/projects/${project.id}/edit`}>Edit</Link>
             </Button>
 
             <Button

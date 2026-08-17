@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -31,6 +31,7 @@ interface TaskFormProps {
 
 export function TaskForm({ projectId, task }: TaskFormProps) {
   const router = useRouter();
+  const { organizationId } = useParams();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -77,11 +78,15 @@ export function TaskForm({ projectId, task }: TaskFormProps) {
       if (isEditing && task) {
         await updateTaskAction(task.id, data as UpdateTaskInput);
 
-        router.push(`/dashboard/projects/${projectId}`);
+        router.push(
+          `/dashboard/organizations/${organizationId}/projects/${projectId}`,
+        );
       } else {
         await createTaskAction(projectId, data as CreateTaskInput);
 
-        router.push(`/dashboard/projects/${projectId}`);
+        router.push(
+          `/dashboard/organizations/${organizationId}/projects/${projectId}`,
+        );
       }
     } catch (error) {
       console.log("Issue while submitting task form: ", error);
@@ -171,7 +176,13 @@ export function TaskForm({ projectId, task }: TaskFormProps) {
       </div>
 
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creating..." : "Create Task"}
+        {isEditing
+          ? isSubmitting
+            ? "Editing Task..."
+            : "Edit Task"
+          : isSubmitting
+            ? "Creating Task..."
+            : "Create Task"}
       </Button>
     </form>
   );

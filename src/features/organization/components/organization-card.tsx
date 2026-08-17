@@ -72,13 +72,12 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [isDeletePending, setIsDeletePending] = useState(false);
-
   async function handleSelect() {
     setIsPending(true);
     try {
       await selectOrganizationAction(organization.id);
 
-      router.push("/dashboard/projects");
+      router.push(`/dashboard/organizations/${organization.id}/projects`);
       router.refresh();
     } catch (error) {
       console.error(error);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ interface ProjectFormProps {
 
 export function ProjectForm({ project }: ProjectFormProps) {
   const router = useRouter();
+  const { id } = useParams();
 
   const [serverError, setServerError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -55,10 +56,10 @@ export function ProjectForm({ project }: ProjectFormProps) {
     try {
       if (isEditing && project) {
         await updateProjectAction(project.id, data);
-        router.push("/dashboard/projects");
+        router.push(`/dashboard/organizations/${id}/projects`);
       } else {
         await createProjectAction(data as CreateProjectInput);
-        router.push("/dashboard/projects");
+        router.push(`/dashboard/organizations/${id}/projects`);
       }
     } catch (error) {
       if (error instanceof Error) {

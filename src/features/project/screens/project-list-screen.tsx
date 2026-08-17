@@ -9,9 +9,14 @@ import { listProjects } from "@/services";
 import { EmptyState } from "../components/empty-state";
 import { ProjectGrid } from "../components/project-grid";
 
-export async function ProjectListScreen() {
-  const projects = await listProjects();
+interface ProjectListScreenProps {
+  organizationId: string;
+}
 
+export async function ProjectListScreen({
+  organizationId,
+}: ProjectListScreenProps) {
+  const projects = await listProjects();
   return (
     <div className="space-y-8">
       <PageHeader
@@ -19,7 +24,11 @@ export async function ProjectListScreen() {
         description="Manage projects inside your current organization."
       >
         <Button>
-          <Link href="/dashboard/projects/new">New Project</Link>
+          <Link
+            href={`/dashboard/organizations/${organizationId}/projects/new`}
+          >
+            New Project
+          </Link>
         </Button>
       </PageHeader>
 

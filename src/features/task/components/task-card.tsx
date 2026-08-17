@@ -53,6 +53,7 @@ interface TaskCardProps {
 export function TaskCard({ task }: TaskCardProps) {
   const params = useParams();
   const projectId = params.projectId;
+  const organizationId = params.organizationId;
   const router = useRouter();
 
   const [isPending, setIsPending] = useState(false);
@@ -104,7 +105,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <div className="flex gap-2">
           <Button size="sm" variant="outline">
             <Link
-              href={`/dashboard/projects/${projectId}/tasks/${task.id}/edit`}
+              href={`/dashboard/organizations/${organizationId}/projects/${projectId}/tasks/${task.id}/edit`}
             >
               Edit
             </Link>

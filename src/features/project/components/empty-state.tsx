@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 
 import { FolderKanban } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useParams } from "next/navigation";
 
 export function EmptyState() {
+  const { organizationId } = useParams();
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center">
       <FolderKanban className="mb-6 h-14 w-14 text-muted-foreground" />
@@ -17,7 +21,9 @@ export function EmptyState() {
       </p>
 
       <Button className="mt-8">
-        <Link href="/dashboard/projects/new">Create Project</Link>
+        <Link href={`/dashboard/organizations/${organizationId}/projects/new`}>
+          Create Project
+        </Link>
       </Button>
     </div>
   );

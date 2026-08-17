@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import { ArrowLeft } from "lucide-react";
@@ -13,12 +15,14 @@ import {
 } from "@/components/ui/card";
 
 import { ProjectForm } from "../components/project-form";
+import { useParams } from "next/navigation";
 
 export function CreateProjectScreen() {
+  const { id } = useParams();
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <Button variant="ghost" className="w-fit">
-        <Link href="/dashboard/projects">
+        <Link href={`/dashboard/organizations/${id}/projects`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Projects
         </Link>

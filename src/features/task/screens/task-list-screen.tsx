@@ -9,9 +9,13 @@ import { TaskGrid } from "../components/task-grid";
 
 interface TaskListScreenProps {
   projectId: string;
+  organizationId: string;
 }
 
-export async function TaskListScreen({ projectId }: TaskListScreenProps) {
+export async function TaskListScreen({
+  projectId,
+  organizationId,
+}: TaskListScreenProps) {
   const tasks = await listTasks(projectId);
 
   if (tasks.length === 0) {
@@ -20,7 +24,7 @@ export async function TaskListScreen({ projectId }: TaskListScreenProps) {
         title="No Tasks Yet"
         description="Create your first task for this project."
         buttonLabel="Create Task"
-        href={`/dashboard/projects/${projectId}/tasks/new`}
+        href={`/dashboard/organizations/${organizationId}/projects/${projectId}/tasks/new`}
       />
     );
   }
@@ -37,7 +41,9 @@ export async function TaskListScreen({ projectId }: TaskListScreenProps) {
         </div>
 
         <Button>
-          <Link href={`/dashboard/projects/${projectId}/tasks/new`}>
+          <Link
+            href={`/dashboard/organizations/${organizationId}/projects/${projectId}/tasks/new`}
+          >
             New Task
           </Link>
         </Button>
