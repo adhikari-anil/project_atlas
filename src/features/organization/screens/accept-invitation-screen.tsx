@@ -17,16 +17,16 @@ export function AcceptInvitationScreen({ token }: AcceptInvitationScreenProps) {
 
   const [error, setError] = useState("");
 
-  async function handleAccept() {
+  const handleAccept = async function () {
     setError("");
     setIsSubmitting(true);
 
     try {
-      await acceptInvitationAction(token);
-
-      router.push("/dashboard/organizations");
-
-      router.refresh();
+      const accept = await acceptInvitationAction(token);
+      console.log("While accepting organization: ", accept);
+      if (accept) {
+        router.push("/dashboard/organizations");
+      }
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -36,7 +36,7 @@ export function AcceptInvitationScreen({ token }: AcceptInvitationScreenProps) {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   if (!token) {
     return (
