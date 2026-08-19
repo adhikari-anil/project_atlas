@@ -3,9 +3,15 @@ import { listMembers } from "@/services/organization/list-member";
 import { InviteMemberForm } from "../components/invite-member-form";
 import { OrganizationMemberList } from "../components/organization-member-list";
 import { LeaveOrganizationButton } from "../components/leave-organization-button";
+import { getCurrentUser } from "@/services";
 
 export async function OrganizationMembersScreen() {
   const members = await listMembers();
+  const currentUser = await getCurrentUser();
+
+  const currentMember = members.find((item) => item.userId === currentUser.id);
+
+  const role = currentMember?.role;
 
   return (
     <main className="space-y-8 p-6">
@@ -16,12 +22,12 @@ export async function OrganizationMembersScreen() {
           Manage people who belong to your organization.
         </p>
       </div>
-      <LeaveOrganizationButton />
-
-      <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
-        <InviteMemberForm />
-
-        <OrganizationMemberList members={members} />
+      {role !== "ADMIN" && role !== "OWNER" && <LeaveOrganizationButton />}
+      <div
+        className={`grid gap-8 ${role !== "MEMBER" ? "lg:grid-cols-[1fr_2fr]" : ""}`}
+      >
+        {role !== "MEMBER" && <InviteMemberForm />}
+        <OrganizationMemberList members={members} role={role} />
       </div>
     </main>
   );
