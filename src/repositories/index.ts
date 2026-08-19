@@ -44,6 +44,9 @@ export * from "./task/list-project-tasks";
 export * from "./organization-member/find-organization-member";
 export * from "./organization-member/list-organization-members";
 
+// for changing organization member roles...
+export * from "./organization-member/update-organization-role";
+
 // Organization invitation...
 export * from "./organization/invitation";
 export * from "./organization/member";

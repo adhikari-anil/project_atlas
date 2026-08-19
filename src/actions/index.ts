@@ -17,6 +17,9 @@ export * from "./organization/list-organization-members";
 
 export * from "./organization/select-organization";
 
+// for changing organization member roles...
+export * from "./organization/change-member-role";
+
 // Organization invitation....
 export * from "./organization/invite-member";
 export * from "./organization/accept-invitation";

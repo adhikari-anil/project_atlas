@@ -27,6 +27,9 @@ export * from "./organization/accept-invitation";
 export * from "./organization/remove-member";
 export * from "./organization/leave-organization";
 
+// changing roles...
+export * from "./organization/change-member-role";
+
 // Project....
 
 export * from "./project/create-project";
