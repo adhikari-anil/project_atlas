@@ -23,7 +23,6 @@ export function AcceptInvitationScreen({ token }: AcceptInvitationScreenProps) {
 
     try {
       const accept = await acceptInvitationAction(token);
-      console.log("While accepting organization: ", accept);
       if (accept) {
         router.push("/dashboard/organizations");
       }

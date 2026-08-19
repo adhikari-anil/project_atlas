@@ -27,7 +27,6 @@ export function OrganizationMemberList({
   members,
   role,
 }: OrganizationMemberListProps) {
-  console.log(role);
   return (
     <div className="rounded-lg border bg-white">
       <div className="border-b p-6">
