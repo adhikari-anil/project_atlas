@@ -4,6 +4,7 @@ import { InviteMemberForm } from "../components/invite-member-form";
 import { OrganizationMemberList } from "../components/organization-member-list";
 import { LeaveOrganizationButton } from "../components/leave-organization-button";
 import { getCurrentUser } from "@/services";
+import { OrganizationRole } from "../../../../generated/prisma/enums";
 
 export async function OrganizationMembersScreen() {
   const members = await listMembers();
@@ -11,7 +12,7 @@ export async function OrganizationMembersScreen() {
 
   const currentMember = members.find((item) => item.userId === currentUser.id);
 
-  const role = currentMember?.role;
+  const role = currentMember?.role as OrganizationRole;
 
   return (
     <main className="space-y-8 p-6">
@@ -27,7 +28,11 @@ export async function OrganizationMembersScreen() {
         className={`grid gap-8 ${role !== "MEMBER" ? "lg:grid-cols-[1fr_2fr]" : ""}`}
       >
         {role !== "MEMBER" && <InviteMemberForm />}
-        <OrganizationMemberList members={members} role={role} />
+        <OrganizationMemberList
+          members={members}
+          role={role}
+          currentUser={currentUser}
+        />
       </div>
     </main>
   );

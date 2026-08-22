@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { OrganizationRole } from "../../../generated/prisma/enums";
 
 export async function findOrganizationInvitationByEmail(
   organizationId: string,
@@ -69,6 +70,38 @@ export async function acceptInvitationTransaction(
       },
     });
 
+    return member;
+  });
+}
+
+export async function rejoinOrganization(
+  invitationId: string,
+  organizationId: string,
+  userId: string,
+  role: OrganizationRole,
+) {
+  return prisma.$transaction(async (tx) => {
+    const member = await tx.organizationMember.update({
+      where: {
+        organizationId_userId: {
+          organizationId,
+          userId,
+        },
+      },
+      data: {
+        status: "ACTIVE",
+        role: role,
+      },
+    });
+
+    await tx.organizationInvitation.update({
+      where: {
+        id: invitationId,
+      },
+      data: {
+        acceptedAt: new Date(),
+      },
+    });
     return member;
   });
 }

@@ -56,6 +56,7 @@ import {
   acceptInvitationTransaction,
   findOrganizationInvitationByToken,
   findOrganizationMember,
+  rejoinOrganization,
 } from "@/repositories";
 
 import { getCurrentUser } from "@/services";
@@ -86,14 +87,21 @@ export async function acceptInvitation(token: string) {
     currentUser.id,
   );
 
-  if (existingMember) {
+  if (existingMember?.status === "LEFT") {
+    return rejoinOrganization(
+      invitation.id,
+      invitation.organizationId,
+      currentUser.id,
+      invitation.role as "ADMIN" | "MEMBER",
+    );
+  } else if (existingMember?.status === "ACTIVE") {
     throw new Error("You are already a member of this organization.");
+  } else {
+    return acceptInvitationTransaction(
+      invitation.id,
+      invitation.organizationId,
+      currentUser.id,
+      invitation.role as "ADMIN" | "MEMBER",
+    );
   }
-
-  return acceptInvitationTransaction(
-    invitation.id,
-    invitation.organizationId,
-    currentUser.id,
-    invitation.role as "ADMIN" | "MEMBER",
-  );
 }

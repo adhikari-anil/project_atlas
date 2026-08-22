@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { RemoveMemberButton } from "./remove-member-button";
-import { OrganizationRole } from "../../../../generated/prisma/enums";
+import { MemberRoleDropdown } from "./member-role-dropdown";
 
 interface OrganizationMember {
   organizationId: string;
@@ -18,14 +18,20 @@ interface OrganizationMember {
   };
 }
 
+interface CurrentUser {
+  id: string;
+}
+
 interface OrganizationMemberListProps {
   members: OrganizationMember[];
-  role: OrganizationRole | undefined;
+  role: "OWNER" | "ADMIN" | "MEMBER";
+  currentUser: CurrentUser;
 }
 
 export function OrganizationMemberList({
   members,
   role,
+  currentUser,
 }: OrganizationMemberListProps) {
   return (
     <div className="rounded-lg border bg-white">
@@ -76,7 +82,16 @@ export function OrganizationMemberList({
                   {member.role}
                 </span>
                 {canRemoveMember && (
-                  <RemoveMemberButton userId={member.userId} />
+                  <div className="flex items-center gap-3">
+                    <MemberRoleDropdown
+                      organizationId={member.organizationId}
+                      userId={member.userId}
+                      currentUserId={currentUser.id}
+                      currentRole={member.role}
+                      currentUserRole={role}
+                    />
+                    <RemoveMemberButton userId={member.userId} />
+                  </div>
                 )}
               </div>
             );

@@ -17,11 +17,15 @@ export async function removeMember(userId: string) {
   const organizationId = await getCurrentOrganization();
 
   // 1. Check current user's permission
-  await authorizeOrganizationMember({
+  const currentUserDetails = await authorizeOrganizationMember({
     organizationId,
     userId: currentUser.id,
     allowedRoles: [OrganizationRole.OWNER, OrganizationRole.ADMIN],
   });
+
+  if (!currentUserDetails) {
+    throw new Error("Your are not authorized member..");
+  }
 
   // 2. Find the member being removed
   const member = await findOrganizationMember(organizationId, userId);
@@ -45,7 +49,10 @@ export async function removeMember(userId: string) {
   }
 
   // 5. Admin cannot remove another admin
-  if (member.role === OrganizationRole.ADMIN) {
+  if (
+    currentUserDetails.role !== "OWNER" &&
+    member.role === OrganizationRole.ADMIN
+  ) {
     throw new Error("Admins cannot remove another admin.");
   }
 
