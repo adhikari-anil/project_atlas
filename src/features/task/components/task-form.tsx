@@ -137,7 +137,7 @@ export function TaskForm({ projectId, task }: TaskFormProps) {
 
           <select
             {...register("status")}
-            className="w-full rounded-md border px-3 py-2"
+            className="w-full rounded-md border px-3 py-2 bg-black text-white"
           >
             <option value="TODO">TODO</option>
 
@@ -152,7 +152,7 @@ export function TaskForm({ projectId, task }: TaskFormProps) {
 
           <select
             {...register("priority")}
-            className="w-full rounded-md border px-3 py-2"
+            className="w-full rounded-md border px-3 py-2 bg-black text-white"
           >
             <option value="LOW">LOW</option>
 

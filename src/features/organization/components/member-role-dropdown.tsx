@@ -81,7 +81,7 @@ export function MemberRoleDropdown({
         onChange={(event) =>
           handleChangeRole(event.target.value as "ADMIN" | "MEMBER")
         }
-        className="rounded-md border bg-white px-3 py-2 text-sm"
+        className="rounded-md border px-3 py-2 text-sm"
       >
         <option value="MEMBER">MEMBER</option>
 

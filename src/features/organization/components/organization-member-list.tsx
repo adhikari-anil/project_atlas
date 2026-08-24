@@ -34,7 +34,7 @@ export function OrganizationMemberList({
   currentUser,
 }: OrganizationMemberListProps) {
   return (
-    <div className="rounded-lg border bg-white">
+    <div className="rounded-lg border">
       <div className="border-b p-6">
         <h2 className="text-lg font-semibold">Members</h2>
 
@@ -64,7 +64,7 @@ export function OrganizationMemberList({
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 font-medium">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full font-medium">
                       {member.user.firstName.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -78,7 +78,7 @@ export function OrganizationMemberList({
                   </div>
                 </div>
 
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium">
+                <span className="rounded-full px-3 py-1 text-xs font-medium">
                   {member.role}
                 </span>
                 {canRemoveMember && (

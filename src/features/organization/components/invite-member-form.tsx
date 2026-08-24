@@ -57,7 +57,7 @@ export function InviteMemberForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-5 rounded-lg border bg-white p-6"
+      className="space-y-5 rounded-lg border p-6"
     >
       <div>
         <h2 className="text-lg font-semibold">Invite Member</h2>
@@ -93,7 +93,7 @@ export function InviteMemberForm() {
         <select
           id="role"
           {...register("role")}
-          className="w-full rounded-md border px-3 py-2"
+          className="w-full rounded-md border px-3 py-2 bg-black text-white"
         >
           <option value="MEMBER">Member</option>
 

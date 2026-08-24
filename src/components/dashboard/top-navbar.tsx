@@ -4,6 +4,18 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Search, Bell, LogOut, Settings } from "lucide-react";
 import { logoutUserAction } from "@/actions";
+import Link from "next/link";
+import Image from "next/image";
+
+interface CurrentUser {
+  user: {
+    email: string;
+    username: string | null;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string | null;
+  };
+}
 
 function getBreadcrumb(path: string) {
   if (path === "/dashboard") return "Dashboard";
@@ -14,7 +26,7 @@ function getBreadcrumb(path: string) {
   else return "Tasks";
 }
 
-export function TopNavbar() {
+export function TopNavbar({ user }: CurrentUser) {
   const router = useRouter();
   const pathname = usePathname();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -67,10 +79,22 @@ export function TopNavbar() {
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               className="flex items-center gap-2 p-2 hover:bg-accent rounded-lg transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-400 to-blue-600" />
-              <span className="hidden md:inline text-sm font-medium text-foreground">
-                JD
-              </span>
+              {user.avatarUrl ? (
+                <Image
+                  src={user.avatarUrl}
+                  alt={user.username || "User"}
+                  className="w-8 h-8 rounded-full object-cover"
+                  width={8}
+                  height={8}
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                  <span className="hidden md:inline text-sm font-medium text-foreground">
+                    {user.firstName?.[0]}
+                    {user.lastName?.[0]}
+                  </span>
+                </div>
+              )}
             </button>
 
             {/* Dropdown menu */}
@@ -78,16 +102,17 @@ export function TopNavbar() {
               <div className="absolute right-0 mt-2 w-48 bg-popover border border-border rounded-lg shadow-lg py-2 z-50">
                 <div className="px-4 py-2 border-b border-border">
                   <p className="text-sm font-medium text-popover-foreground">
-                    John Doe
+                    {user.firstName}
+                    {user.lastName}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    john@example.com
-                  </p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
-                <button className="w-full text-left px-4 py-2 hover:bg-accent text-sm text-popover-foreground flex items-center gap-2 transition-colors">
-                  <Settings className="w-4 h-4" />
-                  Settings
-                </button>
+                <Link href={"/dashboard/setting"}>
+                  <button className="w-full text-left px-4 py-2 hover:bg-accent text-sm text-popover-foreground flex items-center gap-2 transition-colors">
+                    <Settings className="w-4 h-4" />
+                    Settings
+                  </button>
+                </Link>
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-accent text-sm text-popover-foreground flex items-center gap-2 transition-colors border-t border-border"
                   onClick={handleClick}

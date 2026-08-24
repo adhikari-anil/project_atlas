@@ -14,6 +14,17 @@ import {
   FolderKanban,
   ChevronDown,
 } from "lucide-react";
+import Image from "next/image";
+
+interface CurrentUser {
+  user: {
+    email: string;
+    username: string | null;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string | null;
+  };
+}
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -22,7 +33,7 @@ const navigation = [
   { name: "Settings", href: "/dashboard/setting", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ user }: CurrentUser) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isOrganizationsOpen, setIsOrganizationsOpen] = useState(false);
 
@@ -258,14 +269,30 @@ export function Sidebar() {
         {/* Footer */}
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-400 to-blue-600 shrink-0" />
+            {user.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt={user.username || "User"}
+                className="w-8 h-8 rounded-full object-cover"
+                width={8}
+                height={8}
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                <span className="hidden md:inline text-sm font-medium text-foreground">
+                  {user.firstName?.[0]}
+                  {user.lastName?.[0]}
+                </span>
+              </div>
+            )}
             {!isCollapsed && (
               <div className="min-w-0">
                 <p className="text-xs font-medium text-sidebar-foreground truncate">
-                  John Doe
+                  {user.firstName}
+                  {user.lastName}
                 </p>
                 <p className="text-xs text-sidebar-foreground/60 truncate">
-                  john@example.com
+                  {user.email}
                 </p>
               </div>
             )}
