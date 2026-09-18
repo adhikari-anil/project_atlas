@@ -62,6 +62,11 @@ export function Sidebar({ user }: CurrentUser) {
           href: `/dashboard/organizations/${orgId}/members`,
           icon: Users,
         },
+        {
+          name: "Live Updates",
+          href: `/dashboard/organizations/${orgId}/updates`,
+          icon: Users,
+        },
       ]
     : [];
 

@@ -1,9 +1,10 @@
-import { OrganizationRole } from "../../../generated/prisma/enums";
+import { ActivityType, OrganizationRole } from "../../../generated/prisma/enums";
 import { getCurrentUser } from "@/services/index";
 import {
   findOrganizationMembership,
   updateOrganizationMemberRole,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 import { ChangeMemberRoleSchemaInput } from "@/validations/change-member-role";
 export async function changeMemberRole(
   organizationId: string,
@@ -49,5 +50,18 @@ export async function changeMemberRole(
     throw new Error("Admins can only change the role of members.");
   }
 
-  return updateOrganizationMemberRole(organizationId, data.userId, data.role);
+  const updated = await updateOrganizationMemberRole(
+    organizationId,
+    data.userId,
+    data.role,
+  );
+
+  await createActivity({
+    organizationId,
+    userId: user.id,
+    type: ActivityType.MEMBER_ROLE_CHANGED,
+    message: `Changed member role to ${data.role}`,
+  });
+
+  return updated;
 }

@@ -3,12 +3,16 @@ import {
   findProjectById,
   findOrganizationMember,
 } from "@/repositories/index";
+import { createActivity } from "@/services/activities/create-activity";
 
 import { CreateTaskInput } from "@/validations/task-schema";
 
 import { getCurrentUser, authorizeOrganizationMember } from "@/services/index";
 
-import { OrganizationRole } from "../../../generated/prisma/enums";
+import {
+  ActivityType,
+  OrganizationRole,
+} from "../../../generated/prisma/enums";
 
 export async function createTask(projectId: string, data: CreateTaskInput) {
   const currentUser = await getCurrentUser();
@@ -44,7 +48,7 @@ export async function createTask(projectId: string, data: CreateTaskInput) {
     }
   }
 
-  return createTaskRepository({
+  const task = await createTaskRepository({
     title: data.title,
     description: data.description,
     status: data.status,
@@ -71,4 +75,15 @@ export async function createTask(projectId: string, data: CreateTaskInput) {
         }
       : undefined,
   });
+
+  await createActivity({
+    organizationId: task.project.organizationId,
+    projectId: task.projectId,
+    taskId: task.id,
+    userId: task.createdById,
+    type: ActivityType.TASK_CREATED,
+    message: `Created task "${task.title}"`,
+  });
+
+  return task;
 }

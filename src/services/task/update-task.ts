@@ -3,11 +3,12 @@ import {
   findTaskById,
   findOrganizationMember,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 
 import { authorizeOrganizationMember, getCurrentUser } from "@/services/index";
 
 import { UpdateTaskInput } from "@/validations/task-schema";
-import { OrganizationRole } from "../../../generated/prisma/enums";
+import { ActivityType, OrganizationRole } from "../../../generated/prisma/enums";
 
 export async function updateTask(taskId: string, data: UpdateTaskInput) {
   const currentUser = await getCurrentUser();
@@ -39,7 +40,7 @@ export async function updateTask(taskId: string, data: UpdateTaskInput) {
     }
   }
 
-  return updateTaskRepository(taskId, {
+  const updatedTask = await updateTaskRepository(taskId, {
     ...data,
     dueDate: data.dueDate ? new Date(`${data.dueDate}T00:00:00.000Z`) : null,
     assignedTo: data.assignedToId
@@ -50,4 +51,19 @@ export async function updateTask(taskId: string, data: UpdateTaskInput) {
         }
       : undefined,
   });
+
+  const isCompleted = data.status === "DONE" && task.status !== "DONE";
+
+  await createActivity({
+    organizationId: task.project.organizationId,
+    projectId: task.projectId,
+    taskId: task.id,
+    userId: currentUser.id,
+    type: isCompleted ? ActivityType.TASK_COMPLETED : ActivityType.TASK_UPDATED,
+    message: isCompleted
+      ? `Completed task "${task.title}"`
+      : `Updated task "${task.title}"`,
+  });
+
+  return updatedTask;
 }

@@ -61,6 +61,9 @@ model User {
   assignedTasks Task[] @relation("AssignedTasks")
 
   organizationInvitations OrganizationInvitation[] @relation("OrganizationInvitationsSent")
+  teamUpdates             TeamUpdate[]
+
+  activities Activity[]
 
   @@index([status])
   @@map("users")
@@ -169,6 +172,9 @@ model Organization {
   projects Project[]
 
   invitations OrganizationInvitation[]
+  teamUpdates TeamUpdate[]
+
+  activities Activity[]
 
   @@index([ownerId])
   @@map("organizations")
@@ -267,6 +273,8 @@ model Project {
 
   tasks Task[]
 
+  activities Activity[]
+
   @@unique([organizationId, slug])
   @@index([organizationId])
   @@index([createdById])
@@ -317,7 +325,10 @@ model Task {
 
   createdBy User @relation("TaskCreator", fields: [createdById], references: [id])
 
-  assignedTo User? @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  assignedTo  User?        @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  teamUpdates TeamUpdate[]
+
+  activities Activity[]
 
   @@index([projectId])
   @@index([createdById])
@@ -325,4 +336,94 @@ model Task {
   @@index([status])
   @@index([priority])
   @@map("tasks")
+}
+
+// Real Time Features
+
+enum TeamUpdateType {
+  GENERAL
+  TASK_UPDATE
+  BLOCKER
+}
+
+model TeamUpdate {
+  id String @id @default(uuid()) @db.Uuid
+
+  organizationId String @map("organization_id") @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+
+  taskId String? @map("task_id") @db.Uuid
+
+  type TeamUpdateType @default(GENERAL)
+
+  message String @db.VarChar(1000)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([userId])
+  @@index([taskId])
+  @@map("team_updates")
+}
+
+// Owner Feed Features
+
+enum ActivityType {
+  ORGANIZATION_UPDATED
+
+  MEMBER_JOINED
+  MEMBER_REMOVED
+  MEMBER_ROLE_CHANGED
+
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  PROJECT_DELETED
+
+  TASK_CREATED
+  TASK_UPDATED
+  TASK_COMPLETED
+  TASK_DELETED
+
+  TEAM_UPDATE
+}
+
+model Activity {
+  id String @id @default(uuid()) @db.Uuid
+
+  organizationId String @map("organization_id") @db.Uuid
+
+  projectId String? @map("project_id") @db.Uuid
+
+  taskId String? @map("task_id") @db.Uuid
+
+  userId String @map("user_id") @db.Uuid
+
+  type ActivityType
+
+  message String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Keep audit events after the referenced work item is removed.
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([projectId])
+  @@index([taskId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("activities")
 }

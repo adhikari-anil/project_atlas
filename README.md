@@ -235,3 +235,19 @@ These are not new architectural features. They are the final steps before consid
 ---
 
 For a deeper dive into the application's design, features, and architecture, see [aboutProject.md](./aboutProject.md).
+
+---
+
+## Real-time activity feed
+
+Run the web app and the Socket.IO service in separate terminals:
+
+```bash
+npm run dev
+npm run dev:realtime
+```
+
+The realtime service loads the root `.env` by default. Both processes must use
+the same `ACCESS_TOKEN_SECRET` and `REALTIME_INTERNAL_SECRET`. For a deployed
+app, also set `NEXT_PUBLIC_REALTIME_URL`, `REALTIME_SERVER_URL`, and
+`WEB_APP_URL` to their public HTTPS URLs.

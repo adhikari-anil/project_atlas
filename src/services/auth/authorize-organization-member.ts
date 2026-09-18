@@ -18,8 +18,8 @@ export async function authorizeOrganizationMember({
   
   const membership = await findOrganizationMember(organizationId, userId);
 
-  if (!membership) {
-    throw new Error("You are not a member of this organization.");
+  if (!membership || membership.status !== "ACTIVE") {
+    throw new Error("You are not an active member of this organization.");
   }
 
   // Check role

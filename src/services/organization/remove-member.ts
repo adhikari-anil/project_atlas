@@ -2,6 +2,7 @@ import {
   findOrganizationMember,
   removeOrganizationMember,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 
 import {
   authorizeOrganizationMember,
@@ -9,7 +10,7 @@ import {
   getCurrentUser,
 } from "@/services";
 
-import { OrganizationRole } from "../../../generated/prisma/enums";
+import { ActivityType, OrganizationRole } from "../../../generated/prisma/enums";
 
 export async function removeMember(userId: string) {
   const currentUser = await getCurrentUser();
@@ -57,5 +58,14 @@ export async function removeMember(userId: string) {
   }
 
   // 6. Remove the member
-  return removeOrganizationMember(organizationId, userId);
+  const result = await removeOrganizationMember(organizationId, userId);
+
+  await createActivity({
+    organizationId,
+    userId: currentUser.id,
+    type: ActivityType.MEMBER_REMOVED,
+    message: "Removed a member from the organization",
+  });
+
+  return result;
 }

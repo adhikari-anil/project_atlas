@@ -42,3 +42,6 @@ export * from "./task/update-task";
 export * from "./task/delete-task";
 export * from "./task/get-task";
 export * from "./task/list-tasks";
+
+// Team Updates.....
+export * from "./team-update/create-team-update";

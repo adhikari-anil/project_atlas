@@ -19,6 +19,7 @@
 
 # production
 /build
+/realtime-server/dist
 
 # misc
 .DS_Store

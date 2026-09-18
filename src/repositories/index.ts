@@ -50,3 +50,11 @@ export * from "./organization-member/update-organization-role";
 // Organization invitation...
 export * from "./organization/invitation";
 export * from "./organization/member";
+
+// Feed of activities for OWNER...
+export * from "./activities/create-activity";
+export * from "./activities/list-activities";
+
+// Team updates...
+export * from "./team-update/create-team-update";
+export * from "./team-update/list-team-updates";

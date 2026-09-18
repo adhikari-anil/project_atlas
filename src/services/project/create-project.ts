@@ -2,10 +2,12 @@ import {
   createProject as createProjectRepository,
   findProjectBySlug,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 
 import { getCurrentOrganization, getCurrentUser } from "@/services/index";
 
 import { CreateProjectInput } from "@/validations/project-schema";
+import { ActivityType } from "../../../generated/prisma/enums";
 
 import { generateSlug } from "@/lib/slug";
 
@@ -39,7 +41,7 @@ export async function createProject(data: CreateProjectInput) {
    * Save
    */
 
-  return createProjectRepository({
+  const project = await createProjectRepository({
     name: data.name,
     description: data.description,
     status: data.status,
@@ -58,4 +60,14 @@ export async function createProject(data: CreateProjectInput) {
       },
     },
   });
+
+  await createActivity({
+    organizationId: project.organizationId,
+    projectId: project.id,
+    userId: currentUser.id,
+    type: ActivityType.PROJECT_CREATED,
+    message: `Created project "${project.name}"`,
+  });
+
+  return project;
 }

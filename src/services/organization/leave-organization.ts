@@ -2,10 +2,11 @@ import {
   findOrganizationMember,
   removeOrganizationMember,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 
 import { getCurrentOrganization, getCurrentUser } from "@/services";
 
-import { OrganizationRole } from "../../../generated/prisma/enums";
+import { ActivityType, OrganizationRole } from "../../../generated/prisma/enums";
 
 export async function leaveOrganization() {
   const currentUser = await getCurrentUser();
@@ -29,5 +30,14 @@ export async function leaveOrganization() {
     throw new Error("The organization owner cannot leave the organization.");
   }
 
-  return removeOrganizationMember(organizationId, currentUser.id);
+  const result = await removeOrganizationMember(organizationId, currentUser.id);
+
+  await createActivity({
+    organizationId,
+    userId: currentUser.id,
+    type: ActivityType.MEMBER_REMOVED,
+    message: `${currentUser.firstName} ${currentUser.lastName} left the organization`,
+  });
+
+  return result;
 }

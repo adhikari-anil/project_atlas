@@ -21,7 +21,6 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation */}
         <TopNavbar user={user} />
-
         {/* Main content */}
         <main className="flex-1 overflow-auto p-6">
           <div className="h-full">{children}</div>

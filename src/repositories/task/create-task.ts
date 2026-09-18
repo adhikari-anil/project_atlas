@@ -4,5 +4,8 @@ import { Prisma } from "../../../generated/prisma/client";
 export async function createTask(data: Prisma.TaskCreateInput) {
   return prisma.task.create({
     data,
+    include: {
+      project: true,
+    },
   });
 }

@@ -24,10 +24,11 @@ export function ProjectCard({ project }: Props) {
   async function handleDelete() {
     setIsDeletePending(true);
     const confirmed = window.confirm(
-      "Are you sure you want to delete this Organization?",
+      "Are you sure you want to delete this project?",
     );
 
     if (!confirmed) {
+      setIsDeletePending(false);
       return;
     }
     try {
@@ -49,7 +50,7 @@ export function ProjectCard({ project }: Props) {
     } catch (error) {
       console.log("Error while visiting listTaskScreen: ", error);
     } finally {
-      setIsPending(true);
+      setIsPending(false);
     }
   }
 

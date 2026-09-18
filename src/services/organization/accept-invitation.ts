@@ -58,8 +58,10 @@ import {
   findOrganizationMember,
   rejoinOrganization,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 
 import { getCurrentUser } from "@/services";
+import { ActivityType } from "../../../generated/prisma/enums";
 
 export async function acceptInvitation(token: string) {
   const currentUser = await getCurrentUser();
@@ -87,8 +89,9 @@ export async function acceptInvitation(token: string) {
     currentUser.id,
   );
 
+  let result;
   if (existingMember?.status === "LEFT") {
-    return rejoinOrganization(
+    result = await rejoinOrganization(
       invitation.id,
       invitation.organizationId,
       currentUser.id,
@@ -97,11 +100,20 @@ export async function acceptInvitation(token: string) {
   } else if (existingMember?.status === "ACTIVE") {
     throw new Error("You are already a member of this organization.");
   } else {
-    return acceptInvitationTransaction(
+    result = await acceptInvitationTransaction(
       invitation.id,
       invitation.organizationId,
       currentUser.id,
       invitation.role as "ADMIN" | "MEMBER",
     );
   }
+
+  await createActivity({
+    organizationId: invitation.organizationId,
+    userId: currentUser.id,
+    type: ActivityType.MEMBER_JOINED,
+    message: `${currentUser.firstName} ${currentUser.lastName} joined the organization`,
+  });
+
+  return result;
 }

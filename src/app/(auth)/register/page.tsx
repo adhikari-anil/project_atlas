@@ -1,3 +1,5 @@
+"use client";
+
 import { registerUserAction } from "@/actions";
 import { RegisterInput, registerSchema } from "@/validations/auth-schema";
 import { zodResolver } from "@hookform/resolvers/zod";

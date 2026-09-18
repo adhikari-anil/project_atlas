@@ -7,7 +7,7 @@ export async function getOrganization(organizationId: string) {
 
   const membership = await findOrganizationMembership(organizationId, user.id);
 
-  if (!membership) {
+  if (!membership || membership.status !== "ACTIVE") {
     throw new Error("Organization not found.");
   }
 

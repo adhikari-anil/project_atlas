@@ -2,10 +2,11 @@ import {
   deleteTask as deleteTaskRepository,
   findTaskById,
 } from "@/repositories";
+import { createActivity } from "@/services/activities/create-activity";
 
 import { authorizeOrganizationMember, getCurrentUser } from "@/services/index";
 
-import { OrganizationRole } from "../../../generated/prisma/enums";
+import { ActivityType, OrganizationRole } from "../../../generated/prisma/enums";
 
 export async function deleteTask(taskId: string) {
   const currentUser = await getCurrentUser();
@@ -20,6 +21,15 @@ export async function deleteTask(taskId: string) {
     organizationId: task.project.organizationId,
     userId: currentUser.id,
     allowedRoles: [OrganizationRole.OWNER, OrganizationRole.ADMIN],
+  });
+
+  await createActivity({
+    organizationId: task.project.organizationId,
+    projectId: task.projectId,
+    taskId: task.id,
+    userId: currentUser.id,
+    type: ActivityType.TASK_DELETED,
+    message: `Deleted task "${task.title}"`,
   });
 
   return deleteTaskRepository(taskId);

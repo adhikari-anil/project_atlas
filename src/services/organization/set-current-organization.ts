@@ -7,8 +7,9 @@ import { findOrganizationMember } from "@/repositories";
 export async function setCurrentOrganization(organizationId: string) {
   const user = await getCurrentUser();
   const membership = await findOrganizationMember(organizationId, user.id);
-  if (!membership) {
-    throw new Error("You are not a member of this organization.");
+
+  if (!membership || membership.status !== "ACTIVE") {
+    throw new Error("You do not have access to this organization.");
   }
 
   const cookieStore = await cookies();
