@@ -7,8 +7,10 @@ import { getCurrentUser } from "@/services";
 import { OrganizationRole } from "../../../../generated/prisma/enums";
 
 export async function OrganizationMembersScreen() {
-  const members = await listMembers();
-  const currentUser = await getCurrentUser();
+  const [members, currentUser] = await Promise.all([
+    listMembers(),
+    getCurrentUser(),
+  ]);
 
   const currentMember = members.find((item) => item.userId === currentUser.id);
 

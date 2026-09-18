@@ -26,7 +26,7 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
       await selectOrganizationAction(organization.id);
 
       router.push(`/dashboard/organizations/${organization.id}/projects`);
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error(error);
       alert("Failed to select organization.");
