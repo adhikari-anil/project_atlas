@@ -8,7 +8,6 @@ function bearerToken(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  console.log("Request hold from POST Method: ", request);
   const token = bearerToken(request);
 
   if (token) {
