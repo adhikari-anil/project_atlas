@@ -8,10 +8,13 @@ import { verifyRefreshToken } from "@/lib/jwt";
 import { findSessionById, updateSession } from "@/repositories";
 import { issueTokens } from "./issue-tokens";
 
-export async function refreshSession() {
-  const cookieStore = await cookies();
-
-  const refreshToken = cookieStore.get(AUTH.REFRESH_COOKIE_NAME)?.value;
+export async function refreshSession(
+  refreshTokenOverride?: string,
+  options: { setCookies?: boolean } = {},
+) {
+  const refreshToken =
+    refreshTokenOverride ??
+    (await cookies()).get(AUTH.REFRESH_COOKIE_NAME)?.value;
 
   if (!refreshToken) {
     throw new Error("Unauthorized");
@@ -45,13 +48,15 @@ export async function refreshSession() {
     expiresAt: new Date(Date.now() + AUTH.REFRESH_COOKIE_MAX_AGE * 1000),
   });
 
-  await issueTokens({
+  const tokens = await issueTokens({
     userId: payload.userId,
     sessionId: session.id,
     refreshToken: rawRefreshToken,
+    setCookies: options.setCookies,
   });
 
   return {
     success: true,
+    tokens,
   };
 }

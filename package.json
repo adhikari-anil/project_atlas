@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "next dev",
     "dev:realtime": "npm run dev --prefix realtime-server",
+    "dev:cli": "npm run dev --prefix cli",
+    "build:cli": "npm run build --prefix cli",
     "build:realtime": "npm run build --prefix realtime-server",
     "build": "next build",
     "start": "next start",

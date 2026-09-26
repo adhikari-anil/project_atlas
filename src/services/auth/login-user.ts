@@ -9,7 +9,10 @@ import { hashToken } from "@/lib/crypto";
 import { LoginInput } from "@/validations/auth-schema";
 import { issueTokens } from "./issue-tokens";
 
-export async function loginUser(data: LoginInput) {
+export async function loginUser(
+  data: LoginInput,
+  options: { setCookies?: boolean } = {},
+) {
   const { email, password } = data;
 
   /*
@@ -67,13 +70,15 @@ export async function loginUser(data: LoginInput) {
   //   token: rawRefreshToken,
   // });
 
-  await issueTokens({
+  const tokens = await issueTokens({
     userId: user.id,
     sessionId: session.id,
     refreshToken: rawRefreshToken,
+    setCookies: options.setCookies,
   });
 
   return {
     user,
+    tokens,
   };
 }

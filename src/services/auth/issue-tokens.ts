@@ -5,12 +5,14 @@ interface IssueTokensParams {
   userId: string;
   sessionId: string;
   refreshToken: string;
+  setCookies?: boolean;
 }
 
 export async function issueTokens({
   userId,
   sessionId,
   refreshToken,
+  setCookies = true,
 }: IssueTokensParams) {
   const accessToken = generateAccessToken({
     userId,
@@ -23,7 +25,9 @@ export async function issueTokens({
     token: refreshToken,
   });
 
-  await setAuthCookies(accessToken, newRefreshToken);
+  if (setCookies) {
+    await setAuthCookies(accessToken, newRefreshToken);
+  }
 
   return {
     accessToken,

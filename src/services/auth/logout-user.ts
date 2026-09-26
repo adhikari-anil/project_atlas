@@ -6,13 +6,15 @@ import { clearAuthCookies } from "@/lib/cookies";
 import { deleteSession } from "@/repositories";
 import { AUTH } from "@/constants/auth";
 
-export async function logoutUser() {
-  const cookieStore = await cookies();
-  
-  const refreshToken = cookieStore.get(AUTH.REFRESH_COOKIE_NAME)?.value;
+export async function logoutUser(refreshTokenOverride?: string) {
+  const refreshToken =
+    refreshTokenOverride ??
+    (await cookies()).get(AUTH.REFRESH_COOKIE_NAME)?.value;
 
   if (!refreshToken) {
-    await clearAuthCookies();
+    if (!refreshTokenOverride) {
+      await clearAuthCookies();
+    }
     return;
   }
 
@@ -24,7 +26,9 @@ export async function logoutUser() {
     // Ignore invalid token
   }
 
-  await clearAuthCookies();
+  if (!refreshTokenOverride) {
+    await clearAuthCookies();
+  }
 
   return {
     success: true,
