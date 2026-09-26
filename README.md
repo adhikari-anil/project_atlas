@@ -1,253 +1,85 @@
-# SaaS Project Management Platform
+# ProjectHub
 
-A multi-tenant SaaS project management application where users can authenticate, create organizations, manage projects, and manage tasks within those projects.
+ProjectHub is a multi-tenant project management app. Users work in organizations, which contain projects and tasks. Organization membership and roles control access.
 
----
+## Features
 
-## 🚀 Current MVP Status
+- Account registration, login, logout, and protected dashboard
+- Organization creation, membership, invitations, and role management
+- Project and task management
+- Team updates and activity history, with optional realtime activity delivery
+- `projecthub` CLI for authentication, organization selection, and context
 
-```text
-SaaS MVP
-────────────────────────────────
+## Stack
 
-Authentication
-  ✅ Register
-  ✅ Login
-  ✅ Logout
-  ✅ Protected routes
+Next.js, React, TypeScript, Tailwind CSS, Prisma, PostgreSQL, and a separate Express/Socket.IO realtime service.
 
-Organizations
-  ✅ Create
-  ✅ List
-  ✅ Select
-  ✅ Update
-  ✅ Delete
+## Setup
 
-Projects
-  ✅ Create
-  ✅ List
-  ✅ Detail
-  ✅ Update
-  ✅ Delete
-
-Tasks
-  ✅ Create
-  ✅ List
-  ✅ Update
-  ✅ Delete
-
-Dashboard
-  ✅ Real organization/project/task data
-
-Navigation
-  ⬜ Final cleanup
-
-UI
-  ⬜ Final cleanup
-
-Testing
-  ⬜ End-to-end regression
-```
-
-The core MVP functionality is implemented. Final navigation/UI cleanup and a complete end-to-end regression pass remain.
-
----
-
-## 🧰 Tech Stack
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- React Hook Form
-- Zod
-- Prisma
-- PostgreSQL
-- Node.js
-
-The project also uses a layered service/repository architecture to keep application logic organized.
-
----
-
-## 🗂️ Project Structure
-
-The project follows a feature-oriented structure alongside the application layers.
-
-```
-src/
-├── actions/
-│   ├── auth/
-│   ├── organization/
-│   ├── project/
-│   └── task/
-│
-├── app/
-│   ├── dashboard/
-│   │   ├── organizations/
-│   │   ├── projects/
-│   │   └── ...
-│   └── ...
-│
-├── components/
-│   ├── forms/
-│   └── ui/
-│
-├── features/
-│   ├── organization/
-│   ├── project/
-│   └── task/
-│
-├── repositories/
-│
-├── services/
-│   ├── auth/
-│   ├── organization/
-│   ├── project/
-│   └── task/
-│
-├── validations/
-│
-└── lib/
-```
-
-Database models are maintained through Prisma.
-
----
-
-## 🛠️ Local Development
-
-### Prerequisites
-
-Make sure you have:
-
-- Node.js
-- npm
-- PostgreSQL-compatible database
-- Git
-
-### Clone the repository
-
-```bash
-git clone <your-repository-url>
-
-cd <your-project-directory>
-```
-
-### Install dependencies
+Requirements: Node.js 20+, npm, and a PostgreSQL database.
 
 ```bash
 npm install
 ```
 
-### Configure environment variables
+Create `.env` in the repository root with:
 
-Create a `.env` file and configure the required environment variables, including your database connection and authentication configuration.
-
-Example:
-
-```
-DATABASE_URL="your_database_url"
-```
-
-**Do not commit `.env` or any file containing real credentials.**
-
-### Generate Prisma Client
-
-```bash
-npx prisma generate
+```dotenv
+DATABASE_URL="postgresql://..."
+ACCESS_TOKEN_SECRET="a-long-random-secret"
+REFRESH_TOKEN_SECRET="another-long-random-secret"
+REALTIME_INTERNAL_SECRET="a-shared-secret"
 ```
 
-### Run database migrations
+Apply migrations and generate the Prisma client:
 
 ```bash
 npx prisma migrate dev
+npx prisma generate
 ```
 
-### Start development server
+Start the web app at <http://localhost:3000>:
 
 ```bash
 npm run dev
 ```
 
-Then open: [http://localhost:3000](http://localhost:3000)
-
----
-
-## 📋 MVP Testing Checklist
-
-Before considering the MVP release-ready, perform the following end-to-end test.
-
-### Authentication
-- [ ] Register a new account
-- [ ] Login
-- [ ] Access dashboard
-- [ ] Logout
-- [ ] Verify protected routes redirect unauthenticated users
-
-### Organizations
-- [ ] Create organization
-- [ ] Verify owner membership
-- [ ] List organizations
-- [ ] Select organization
-- [ ] Update organization
-- [ ] Delete organization
-
-### Projects
-- [ ] Create project
-- [ ] Verify project belongs to selected organization
-- [ ] List projects
-- [ ] Open project detail
-- [ ] Update project
-- [ ] Delete project
-
-### Tasks
-- [ ] Create task
-- [ ] List tasks
-- [ ] Update task
-- [ ] Change task status
-- [ ] Change task priority
-- [ ] Delete task
-
-### Data isolation
-- [ ] Verify Organization A cannot access Organization B's projects
-- [ ] Verify task operations are scoped to the correct organization
-- [ ] Verify unauthorized organization operations are rejected
-
----
-
-## 🚧 Current Remaining Work
-
-The core functionality is complete. The remaining work is intentionally focused on polish and verification:
-
-```
-Navigation
-  ⬜ Final cleanup
-
-UI
-  ⬜ Final cleanup
-
-Testing
-  ⬜ End-to-end regression
-```
-
-These are not new architectural features. They are the final steps before considering the current MVP stable.
-
----
-
-For a deeper dive into the application's design, features, and architecture, see [aboutProject.md](./aboutProject.md).
-
----
-
-## Real-time activity feed
-
-Run the web app and the Socket.IO service in separate terminals:
+To enable realtime activity, start the service in another terminal:
 
 ```bash
-npm run dev
 npm run dev:realtime
 ```
 
-The realtime service loads the root `.env` by default. Both processes must use
-the same `ACCESS_TOKEN_SECRET` and `REALTIME_INTERNAL_SECRET`. For a deployed
-app, also set `NEXT_PUBLIC_REALTIME_URL`, `REALTIME_SERVER_URL`, and
-`WEB_APP_URL` to their public HTTPS URLs.
+It reads the root `.env` by default. For deployment, configure `WEB_APP_URL`, `REALTIME_SERVER_URL`, and `NEXT_PUBLIC_REALTIME_URL` for your environment. Keep secrets out of source control.
+
+## CLI
+
+Install CLI dependencies and run commands locally through the development script:
+
+```bash
+npm install --prefix cli
+npm run dev:cli -- --help
+npm run dev:cli -- auth login
+npm run dev:cli -- org list
+npm run dev:cli -- org use <organization-slug-or-id>
+npm run dev:cli -- context
+```
+
+The CLI uses `http://localhost:3000` by default. Set `PRODUCT_API_URL` to use another app URL. To invoke the built command as `projecthub`, build and link it:
+
+```bash
+npm run build:cli
+cd cli && npm link
+projecthub --help
+```
+
+CLI credentials and the selected organization are stored in `~/.product/auth.json`, not in the project directory.
+
+## Checks
+
+```bash
+npm run lint
+npm run build
+npm run build:realtime
+npm run build:cli
+```
