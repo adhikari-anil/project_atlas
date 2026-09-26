@@ -5,7 +5,7 @@ export async function statusCommand() {
 
   if (!user) {
     console.log("Not logged in.");
-    console.log("Run: product auth login");
+    console.log("Run: projecthub auth login");
     return;
   }
 

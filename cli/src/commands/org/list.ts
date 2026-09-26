@@ -7,7 +7,7 @@ export async function listCommand() {
 
     if (!organizations) {
       console.log("You are not logged in.");
-      console.log("Run: product auth login");
+      console.log("Run: projecthub auth login");
       return;
     }
 
@@ -23,7 +23,7 @@ export async function listCommand() {
     }
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
-      throw new Error("You are not logged in.\nRun: product auth login");
+      throw new Error("You are not logged in.\nRun: projecthub auth login");
     }
     throw error;
   }

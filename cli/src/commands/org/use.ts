@@ -6,7 +6,7 @@ export async function useCommand(identifier: string) {
     const organization = await selectOrganization(identifier);
 
     if (!organization) {
-      throw new Error("You are not logged in.\nRun: product auth login");
+      throw new Error("You are not logged in.\nRun: projecthub auth login");
     }
 
     console.log(`✓ Using organization: ${organization.name}`);
@@ -15,7 +15,7 @@ export async function useCommand(identifier: string) {
       throw new Error("Organization not found or access denied.");
     }
     if (error instanceof ApiError && error.status === 401) {
-      throw new Error("You are not logged in.\nRun: product auth login");
+      throw new Error("You are not logged in.\nRun: projecthub auth login");
     }
     throw error;
   }

@@ -5,13 +5,13 @@ export async function contextCommand() {
 
   if (!config) {
     console.log("You are not logged in.");
-    console.log("Run: product auth login");
+    console.log("Run: projecthub auth login");
     return;
   }
 
   if (!config.currentOrganization) {
     console.log("No organization selected.");
-    console.log("Run: product org use <org>");
+    console.log("Run: projecthub org use <org>");
     return;
   }
 
