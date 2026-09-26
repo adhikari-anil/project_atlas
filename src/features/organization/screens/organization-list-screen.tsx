@@ -22,9 +22,7 @@ export async function OrganizationListScreen() {
       {organizations.length === 0 ? (
         <EmptyState />
       ) : (
-        <OrganizationGrid
-          organization={organizations.map((o) => o.organization)}
-        />
+        <OrganizationGrid organization={organizations} />
       )}
     </div>
   );

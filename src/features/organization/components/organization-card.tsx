@@ -11,12 +11,17 @@ import { Organization } from "../types/organization";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
+import { OrganizationRole } from "../../../../generated/prisma/enums";
 
 interface OrganizationCardProps {
   organization: Organization;
+  role: string;
 }
 
-export function OrganizationCard({ organization }: OrganizationCardProps) {
+export function OrganizationCard({
+  organization,
+  role,
+}: OrganizationCardProps) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [isDeletePending, setIsDeletePending] = useState(false);
@@ -57,27 +62,38 @@ export function OrganizationCard({ organization }: OrganizationCardProps) {
   return (
     <div className="group w-full text-left">
       <div className="flex h-full flex-col rounded-xl border p-6 transition hover:shadow-md gap-4">
-        <div className="flex justify-between gap-2">
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
-            {organization.type}
-          </span>
-          <div className="flex gap-2">
-            <Button size="sm" variant="outline">
-              <Link href={`/dashboard/organizations/${organization.id}/edit`}>
-                Edit
-              </Link>
-            </Button>
+        {role === OrganizationRole.ADMIN || role === OrganizationRole.OWNER ? (
+          <div className="flex justify-between gap-2">
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+              {organization.type}
+            </span>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline">
+                <Link href={`/dashboard/organizations/${organization.id}/edit`}>
+                  Edit
+                </Link>
+              </Button>
 
-            <Button
-              type="button"
-              size="sm"
-              variant="destructive"
-              onClick={handleDelete}
-            >
-              {isDeletePending ? "Deleting..." : "Delete"}
-            </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                {isDeletePending ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex justify-between gap-2">
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+              {organization.type}
+            </span>
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+              {role}
+            </span>
+          </div>
+        )}
         {/* Header */}
         <div className="flex justify-between">
           <h3 className="text-lg font-semibold">{organization.name}</h3>
