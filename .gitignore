@@ -20,6 +20,7 @@
 # production
 /build
 /realtime-server/dist
+/cli/dist
 
 # misc
 .DS_Store

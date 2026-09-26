@@ -1,10 +1,10 @@
 {
-  "name": "product-cli",
+  "name": "projecthub-cli",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "bin": {
-    "product": "dist/index.js"
+    "projecthub": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",

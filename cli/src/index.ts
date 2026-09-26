@@ -9,8 +9,8 @@ import { registerOrganizationCommands } from "./commands/org/index.js";
 const program = new Command();
 
 program
-  .name("product")
-  .description("Product command-line interface")
+  .name("projecthub")
+  .description("Platform's own command-line interface")
   .version("0.1.0");
 
 registerAuthCommands(program);
