@@ -10,6 +10,7 @@ ProjectHub is a multi-tenant project management application. A user can belong t
 - Organization team updates and an activity history
 - Optional live activity delivery through a separate Socket.IO service
 - `projecthub` CLI authentication, organization listing/selection, and context display
+- CLI project listing, details, creation, updates, and deletion in the selected organization
 
 ## Application Structure
 
@@ -30,6 +31,8 @@ The CLI is in `cli/`. Its HTTP API endpoints are under `src/app/api/cli/`; it ca
 ## Organization Context
 
 The web app stores its selected organization ID in an HTTP-only cookie. The CLI does not share browser cookies: it stores credentials and its selected organization in `~/.product/auth.json`. The CLI resolves an organization by ID or slug and the server checks that the user has an active membership before selecting it.
+
+Project CLI commands use that selected organization. The API verifies active membership for project reads and creation; updates and deletion are restricted to organization owners and admins.
 
 ## Data Model
 

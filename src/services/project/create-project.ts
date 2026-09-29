@@ -11,15 +11,19 @@ import { ActivityType } from "../../../generated/prisma/enums";
 
 import { generateSlug } from "@/lib/slug";
 
-export async function createProject(data: CreateProjectInput) {
+export async function createProject(
+  data: CreateProjectInput,
+  context?: { userId: string; organizationId: string },
+) {
   /*
    * Current User
    */
 
-  const currentUser = await getCurrentUser();
+  const userId = context?.userId ?? (await getCurrentUser()).id;
 
   // Get your current organization...
-  const organizationId = await getCurrentOrganization();
+  const organizationId =
+    context?.organizationId ?? (await getCurrentOrganization());
 
   /*
    * Generate slug
@@ -56,7 +60,7 @@ export async function createProject(data: CreateProjectInput) {
 
     createdBy: {
       connect: {
-        id: currentUser.id,
+        id: userId,
       },
     },
   });
@@ -64,7 +68,7 @@ export async function createProject(data: CreateProjectInput) {
   await createActivity({
     organizationId: project.organizationId,
     projectId: project.id,
-    userId: currentUser.id,
+    userId,
     type: ActivityType.PROJECT_CREATED,
     message: `Created project "${project.name}"`,
   });

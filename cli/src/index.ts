@@ -5,6 +5,7 @@ import { Command } from "commander";
 import { registerAuthCommands } from "./commands/auth/index.js";
 import { contextCommand } from "./commands/context.js";
 import { registerOrganizationCommands } from "./commands/org/index.js";
+import { registerProjectCommands } from "./commands/project/index.js";
 
 const program = new Command();
 
@@ -15,6 +16,7 @@ program
 
 registerAuthCommands(program);
 registerOrganizationCommands(program);
+registerProjectCommands(program);
 program
   .command("context")
   .description("Show the current CLI context")

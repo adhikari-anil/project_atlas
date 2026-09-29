@@ -7,21 +7,21 @@ import { getCurrentUser } from "@/services/index";
 import { ActivityType, OrganizationRole } from "../../../generated/prisma/enums";
 import { authorizeOrganizationMember } from "@/services/auth/authorize-organization-member";
 
-export async function deleteProject(projectId: string) {
+export async function deleteProject(projectId: string, userIdOverride?: string) {
   const project = await findProjectById(projectId);
-  const currentUser = await getCurrentUser();
+  const userId = userIdOverride ?? (await getCurrentUser()).id;
 
   if (project) {
     await authorizeOrganizationMember({
       organizationId: project.organizationId,
-      userId: currentUser.id,
+      userId,
       allowedRoles: [OrganizationRole.OWNER, OrganizationRole.ADMIN],
     });
 
     await createActivity({
       organizationId: project.organizationId,
       projectId: project.id,
-      userId: currentUser.id,
+      userId,
       type: ActivityType.PROJECT_DELETED,
       message: `Deleted project "${project.name}"`,
     });

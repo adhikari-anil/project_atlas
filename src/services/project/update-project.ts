@@ -11,9 +11,10 @@ import { UpdateProjectInput } from "@/validations/project-schema";
 export async function updateProject(
   projectId: string,
   data: UpdateProjectInput,
+  userIdOverride?: string,
 ) {
-  const [currentUser, project] = await Promise.all([
-    getCurrentUser(),
+  const [userId, project] = await Promise.all([
+    userIdOverride ?? getCurrentUser().then((user) => user.id),
     findProjectById(projectId),
   ]);
 
@@ -21,7 +22,7 @@ export async function updateProject(
 
   await authorizeOrganizationMember({
     organizationId: project.organizationId,
-    userId: currentUser.id,
+    userId,
     allowedRoles: [OrganizationRole.OWNER, OrganizationRole.ADMIN],
   });
 
@@ -30,7 +31,7 @@ export async function updateProject(
   await createActivity({
     organizationId: project.organizationId,
     projectId,
-    userId: currentUser.id,
+    userId,
     type: ActivityType.PROJECT_UPDATED,
     message: `Updated project "${updatedProject.name}"`,
   });

@@ -1,8 +1,9 @@
 import { listProjectsByOrganization } from "@/repositories";
 import { getCurrentOrganization } from "../organization/get-current-organization";
 
-export async function listProjects() {
-  const organizationId = await getCurrentOrganization();
+export async function listProjects(organizationIdOverride?: string) {
+  const organizationId =
+    organizationIdOverride ?? (await getCurrentOrganization());
 
   if (!organizationId) {
     throw new Error("No organization selected.");

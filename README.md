@@ -63,7 +63,17 @@ npm run dev:cli -- auth login
 npm run dev:cli -- org list
 npm run dev:cli -- org use <organization-slug-or-id>
 npm run dev:cli -- context
+npm run dev:cli -- project list
+npm run dev:cli -- project get <project-id>
+npm run dev:cli -- project create --name "Website refresh"
+npm run dev:cli -- project update <project-id> --status ACTIVE
+npm run dev:cli -- project delete <project-id>
 ```
+
+Project commands use the selected organization. Project updates and deletion
+require an organization OWNER or ADMIN; deletion asks for confirmation unless
+`--yes` is passed. Valid statuses are `PLANNING`, `ACTIVE`, `ON_HOLD`,
+`COMPLETED`, and `ARCHIVED`.
 
 The CLI uses `http://localhost:3000` by default. Set `PRODUCT_API_URL` to use another app URL. To invoke the built command as `projecthub`, build and link it:
 

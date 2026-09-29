@@ -11,7 +11,12 @@ export class ApiError extends Error {
 
 export async function apiRequest<T>(
   path: string,
-  options: { method?: string; body?: unknown; token?: string } = {},
+  options: {
+    method?: string;
+    body?: unknown;
+    token?: string;
+    organizationId?: string;
+  } = {},
 ): Promise<T> {
   try {
     const response = await fetch(`${getApiBaseUrl()}${path}`, {
@@ -20,6 +25,9 @@ export async function apiRequest<T>(
         Accept: "application/json",
         ...(options.body ? { "Content-Type": "application/json" } : {}),
         ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
+        ...(options.organizationId
+          ? { "X-Organization-Id": options.organizationId }
+          : {}),
       },
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
