@@ -16,7 +16,7 @@ export async function listActivities({
   projectId,
   taskId,
   userId,
-  take = 50,
+  take,
 }: ListActivitiesInput) {
   return prisma.activity.findMany({
     where: {
