@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 
 import { latestCommand } from "./latest.js";
+import { watchCommand } from "./watch.js";
 
 export function registerRealtimeCommands(program: Command) {
   const realtime = program
@@ -24,4 +25,10 @@ export function registerRealtimeCommands(program: Command) {
     )
     .option("--json", "Print updates as JSON")
     .action(latestCommand);
+
+  realtime
+    .command("watch")
+    .description("Watch activity updates in realtime")
+    .option("--json", "Print events as JSON Lines")
+    .action(watchCommand);
 }
